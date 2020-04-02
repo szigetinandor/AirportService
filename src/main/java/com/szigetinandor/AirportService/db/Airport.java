@@ -1,5 +1,7 @@
 package com.szigetinandor.AirportService.db;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -13,9 +15,17 @@ public class Airport {
 	@Column
 	public String name;
 
-	@OneToMany(mappedBy = "from_id")
+	@JsonIgnore
+	@OneToMany(mappedBy = "from", cascade=CascadeType.ALL)
 	public List<Flight> arrivals;
 
-	@OneToMany(mappedBy = "to_id")
+	@JsonIgnore
+	@OneToMany(mappedBy = "to", cascade=CascadeType.ALL)
 	public List<Flight> departures;
+
+	public Airport(String name) {
+		this.name = name;
+	}
+
+	public Airport() {}
 }

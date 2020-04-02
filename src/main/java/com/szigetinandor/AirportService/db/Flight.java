@@ -1,9 +1,6 @@
 package com.szigetinandor.AirportService.db;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Flight {
@@ -52,10 +49,10 @@ public class Flight {
 	public int to_id;
 
 	@Column
-	public String arrival;
+	public String departure;
 
 	@Column
-	public String departure;
+	public String arrival;
 
 	@Column
 	public int from_gate;
@@ -65,4 +62,12 @@ public class Flight {
 
 	@Column
 	public String remark;
+
+	@ManyToOne(cascade=CascadeType.ALL)
+	@JoinColumn(name="from_id", insertable = false, updatable = false)
+	public Airport from;
+
+	@ManyToOne
+	@JoinColumn(name="to_id", insertable = false, updatable = false)
+	public Airport to;
 }

@@ -5,6 +5,7 @@ import com.szigetinandor.AirportService.db.Flight;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,24 @@ public class AirportController {
 				.addAnnotatedClass(Airport.class)
 				.addAnnotatedClass(Flight.class)
 				.buildSessionFactory();
+
+		Session session = sessionFactory.openSession();
+		session.beginTransaction();
+		session.save(new Airport("BUD"));
+		session.save(new Airport("LAX"));
+		session.save(new Airport("ATL"));
+		session.save(new Airport("PEK"));
+		session.save(new Airport("HND"));
+		session.getTransaction().commit();
+		session.close();
+	}
+
+	@RequestMapping(value = "/api/airports")
+	public List<Airport> airports() {
+		Session session = sessionFactory.openSession();
+		List<Airport> airports = session.createQuery("SELECT a FROM Airport a", Airport.class).getResultList();
+		session.close();
+		return airports;
 	}
 
 	@RequestMapping(value = "/api/flights")
@@ -34,13 +53,34 @@ public class AirportController {
 		return flights;
 	}
 
-	@RequestMapping(value = "/api/flights/{id}")
+	@RequestMapping(value = "/api/airports/{id}/departures")
+	public List<Flight> getDepartures(@PathVariable int id) {
+		Session session = sessionFactory.openSession();
+		Airport airport = session.get(Airport.class, id);
+		session.detach(airport);
+		List<Flight> departures = airport.departures;
+		session.close();
+		return departures;
+	}
+
+	@RequestMapping(value = "/api/airports/{id}/arrivals")
+	public List<Flight> getArrivals(@PathVariable int id) {
+		Session session = sessionFactory.openSession();
+		Airport airport = session.get(Airport.class, id);
+		session.detach(airport);
+		List<Flight> arrivals = airport.arrivals;
+		session.close();
+		return arrivals;
+	}
+
+
+	/*@RequestMapping(value = "/api/flights/{id}")
 	public Flight flight(@PathVariable String id) {
 		Session session = sessionFactory.openSession();
 		Flight flight = session.createQuery("SELECT a FROM Flight a", Flight.class).getSingleResult();
 		session.close();
 		return flight;
-	}
+	}*/
 
 	@PostMapping(value = "/api/flights/add")
 	public String addFlight(
