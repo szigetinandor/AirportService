@@ -1,4 +1,4 @@
-package com.szigetinandor.AirportService;
+package com.airport.AirportService;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

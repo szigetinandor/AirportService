@@ -1,4 +1,4 @@
-package com.szigetinandor.AirportService.db;
+package com.airport.AirportService.db;
 
 import javax.persistence.*;
 

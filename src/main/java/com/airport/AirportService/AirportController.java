@@ -1,11 +1,10 @@
-package com.szigetinandor.AirportService;
+package com.airport.AirportService;
 
-import com.szigetinandor.AirportService.db.Airport;
-import com.szigetinandor.AirportService.db.Flight;
+import com.airport.AirportService.db.Airport;
+import com.airport.AirportService.db.Flight;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
@@ -42,8 +41,6 @@ public class AirportController {
 		Session session = sessionFactory.openSession();
 		List<Airport> airports = session.createQuery("SELECT a FROM Airport a", Airport.class).getResultList();
 		session.close();
-		for(Airport a : airports)
-			System.out.println(a.name);
 		return airports;
 	}
 
