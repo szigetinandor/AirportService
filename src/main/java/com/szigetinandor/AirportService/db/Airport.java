@@ -16,11 +16,11 @@ public class Airport {
 	public String name;
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "from", cascade=CascadeType.ALL)
+	@OneToMany(mappedBy = "from", cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	public List<Flight> arrivals;
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "to", cascade=CascadeType.ALL)
+	@OneToMany(mappedBy = "to", cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	public List<Flight> departures;
 
 	public Airport(String name) {

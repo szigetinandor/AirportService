@@ -5,13 +5,13 @@ import com.szigetinandor.AirportService.db.Flight;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
-import java.util.ArrayList;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -42,6 +42,8 @@ public class AirportController {
 		Session session = sessionFactory.openSession();
 		List<Airport> airports = session.createQuery("SELECT a FROM Airport a", Airport.class).getResultList();
 		session.close();
+		for(Airport a : airports)
+			System.out.println(a.name);
 		return airports;
 	}
 
@@ -54,7 +56,7 @@ public class AirportController {
 	}
 
 	@RequestMapping(value = "/api/airports/{id}/departures")
-	public List<Flight> getDepartures(@PathVariable int id) {
+	public List<Flight> getDepartures(@PathVariable int id) throws JSONException {
 		Session session = sessionFactory.openSession();
 		Airport airport = session.get(Airport.class, id);
 		session.detach(airport);
@@ -83,7 +85,7 @@ public class AirportController {
 	}*/
 
 	@PostMapping(value = "/api/flights/add")
-	public String addFlight(
+	public RedirectView addFlight(
 			@RequestParam String flight,
 			@RequestParam String from_terminal,
 			@RequestParam String to_terminal,
@@ -93,8 +95,9 @@ public class AirportController {
 			@RequestParam String departure,
 			@RequestParam int from_gate,
 			@RequestParam int to_gate,
-			@RequestParam String remark
-	) {
+			@RequestParam String remark,
+			HttpServletResponse response
+	) throws IOException {
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
 		Flight f = new Flight();
@@ -112,6 +115,6 @@ public class AirportController {
 		session.getTransaction().commit();
 		session.close();
 
-		return "redirect:/api/flights/" + f.flight;
+		return new RedirectView("/api/flights");
 	}
 }

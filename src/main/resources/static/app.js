@@ -52,30 +52,42 @@ let arrivalsTable;
 $(document).ready( function () {
     departuresTable = $('#departures').DataTable({
         ajax: '/api/airports/1/departures',
+        dataSrc: '',
         columns: [
             {
+                title: 'id',
+                data: 'id',
+                defaultContent: '-'
+            },
+            {
                 title: 'Flight',
-                data: 'flight'
+                data: 'flight',
+                defaultContent: '-'
             },
             {
                 title: 'Terminal',
-                data: 'from_terminal'
+                data: 'from_terminal',
+                defaultContent: '-'
             },
             {
                 title: 'Gate',
-                data: 'from_gate'
+                data: 'from_gate',
+                defaultContent: '-'
             },
             {
                 title: 'To',
-                data: 'to'
+                data: 'to.name',
+                defaultContent: '-'
             },
             {
                 title: 'time',
-                data: 'departure'
+                data: 'departure',
+                defaultContent: '-'
             },
             {
                 title: 'Remark',
-                data: "remark"
+                data: "remark",
+                defaultContent: '-'
             },
             {
                 title: 'Interactions',
@@ -92,6 +104,7 @@ $(document).ready( function () {
 
     arrivalsTable = $('#arrivals').DataTable({
         ajax: '/api/airports/1/arrivals',
+        dataSrc: '',
         columns: [
             {
                 title: 'Flight',
@@ -107,7 +120,7 @@ $(document).ready( function () {
             },
             {
                 title: 'To',
-                data: 'from'
+                data: 'from.name'
             },
             {
                 title: 'time',
@@ -138,12 +151,12 @@ $(document).ready( function () {
 
 
 
-function showProducts() {
+function showFlights() {
     hideAll();
-    setActive('products');
-    $('#add-button').attr('onclick', 'event.preventDefault();showAddProductForm()');
+    $('#add-button').attr('onclick', 'event.preventDefault();showAddFlightForm()');
     departuresTable.ajax.reload();
-    $('#products-container').show();
+    arrivalsTable.ajax.reload();
+    $('#flights-container').show();
 }
 
 function drawButtons(updateFunc, type, row) {
@@ -205,7 +218,7 @@ function addItems(element, url, selected) {
         type: 'GET',
         dataType: 'json',
         success: function(items) {
-            items.data.forEach(function(item) {
+            items.forEach(function(item) {
                 element.append(`<option value="${item.id}">${item.name}</option>`);
             });
             if(selected)
